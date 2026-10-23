@@ -1,0 +1,14 @@
+import type { MeshHealth,RepairFinding } from './types';
+export function findingsFor(h:MeshHealth):RepairFinding[]{
+  const result:RepairFinding[]=[];
+  if(h.boundaryEdges)result.push({id:'boundaries',title:'Open boundaries detected',level:'issue',detail:`${h.boundaryEdges.toLocaleString()} approximate boundary edges. Confirm whether these are missing surfaces, intentional openings in a working sheet, or seams.`,toolId:'non-manifold',problemId:'holes'});
+  if(h.nonManifoldEdges)result.push({id:'junctions',title:'Edges shared by more than two faces',level:'issue',detail:`${h.nonManifoldEdges.toLocaleString()} non-manifold edge junctions. Inspect them before deleting or rebuilding anything.`,toolId:'non-manifold',problemId:'non-manifold'});
+  if(h.inconsistentEdges)result.push({id:'winding',title:'Inconsistent face winding',level:'issue',detail:`${h.inconsistentEdges.toLocaleString()} shared edges have inconsistent direction. Inspect orientation and topology before recalculating.`,toolId:'normals',problemId:'normals'});
+  if(h.duplicateTriangles)result.push({id:'duplicates',title:'Overlapping duplicate triangles',level:'issue',detail:`${h.duplicateTriangles.toLocaleString()} coincident triangles were found. This is not a general self-intersection test. Inspect redundant surfaces locally.`,toolId:'interior',problemId:'internal'});
+  if(h.degenerateTriangles)result.push({id:'degenerate',title:'Zero-area / collapsed triangles',level:'issue',detail:`${h.degenerateTriangles.toLocaleString()} degenerate triangles were found. Inspect before merging or deleting.`,toolId:'merge-distance',problemId:'non-manifold'});
+  if(h.components!==null&&h.components>1)result.push({id:'components',title:'More than one connected shell',level:'review',detail:`${h.components.toLocaleString()} edge-connected components. These may be intentional parts, a cavity, or detached details; do not automatically delete them.`,toolId:'linked-pieces',problemId:'floating'});
+  if(h.inwardComponents)result.push({id:'inward',title:'Inward-wound closed shell',level:'review',detail:`${h.inwardComponents} closed component(s) have negative signed volume. An inner cavity shell can legitimately face inward; inspect design intent.`,toolId:'face-orientation',problemId:'normals'});
+  if(h.triangles>200_000)result.push({id:'dense',title:'Dense mesh · detailed topology unchecked',level:'review',detail:'All geometry contributes to dimensions and area. Edge health and component counts are not established above the topology limit. Use Blender checks; simplify only if useful detail survives.',toolId:'toolbox',problemId:'polygons'});
+  if(!result.length)result.push({id:'review',title:'No issue found by the available basic checks',level:'info',detail:'This is not a printability pass. Check self-intersections, actual thickness, attachments and layer preview in Blender/Bambu Studio.',toolId:'toolbox',problemId:'unknown'});
+  return result;
+}

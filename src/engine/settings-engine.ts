@@ -23,7 +23,7 @@ export function advise(c:Context,problemId:string,a:Answers) {
   const longest=Math.max(c.x,c.y,c.z);
   const multiplier=c.load==='display'?3:c.load==='handling'?4:6;
   const thickness=c.nozzle*multiplier;
-  const baseAssumptions=['Final physical dimensions have been verified in Blender.','Scale has been applied on the working duplicate.','No mesh has been inspected by this website.'];
+  const baseAssumptions=['Final physical dimensions have been verified in Blender.','Scale has been applied on the working duplicate.','Numerical trials do not certify topology, fit or strength; local geometry checks have separate limits.'];
   const critical=c.load==='critical';
   if(c.smallestDetail<c.nozzle) warnings.push(`Your ${mm(c.smallestDetail)} detail is smaller than the ${mm(c.nozzle)} nozzle diameter. Some isolated XY features may not survive slicing; check actual line width, orientation and a test print.`);
   else if(c.smallestDetail<2*c.nozzle) warnings.push(`Your ${mm(c.smallestDetail)} detail is under two nozzle diameters. Treat unsupported strands and attachments as fragile; inspect layer preview and test handling.`);
