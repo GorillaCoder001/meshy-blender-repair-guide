@@ -29,7 +29,7 @@ export function DecisionPanel({context,answers}:{context:Context;answers:Answers
 }
 export function DiagnosisResults({context:c,problemId,answers:a,mode}:{context:Context;problemId:string;answers:Answers;mode:Mode}) {
   const d=diagnose(problemId,c,a);const r=advise(c,problemId,a);const workflow=workflowFor(d);
-  return <div className="results"><div className="result-heading"><CheckCircle2 size={24}/><div><span className="eyebrow">YOUR GUIDED REPAIR PATH</span><h2>{d.title}</h2></div></div><p className="lead small-lead">{d.explanation}</p><div className="notice neutral"><p>Based on your answers. No model file has been inspected. Recheck your observations in Blender before editing.</p></div>
+  return <div className="results"><div className="result-heading"><CheckCircle2 size={24}/><div><span className="eyebrow">YOUR GUIDED REPAIR PATH</span><h2>{d.title}</h2></div></div><p className="lead small-lead">{d.explanation}</p><div className="notice neutral"><p>This manual workflow uses your answers. For measured geometry checks, open the local model advisor. Recheck your observations in Blender before editing.</p></div>
     <DecisionPanel context={c} answers={a}/>
     <section className="result-section"><span className="eyebrow">BEFORE YOU CHANGE ANYTHING</span><h3>Confirm the diagnosis</h3>{d.confirmations.map(text=><p key={text}>{text}</p>)}</section>
     {[...d.warnings,...r.warnings].length>0&&<div className="notice amber"><AlertTriangle size={19}/><ul>{[...new Set([...d.warnings,...r.warnings])].map(w=><li key={w}>{w}</li>)}</ul></div>}
@@ -51,6 +51,6 @@ export function DiagnosePage({initialProblem='unknown',advisor=false,context,onC
       {stage===2&&<DiagnosisResults context={context} problemId={problemId} answers={answers} mode={mode}/>}
       {errors.length>0&&<div role="alert" className="notice amber"><ul>{errors.map(e=><li key={e}>{e}</li>)}</ul></div>}
       <div className="wizard-actions">{stage>0&&<button className="button secondary" onClick={()=>setStage(s=>s-1)}><ArrowLeft size={16}/>Back</button>}{stage<2?<button className="button primary" onClick={next}>{stage===0?'Continue to observations':'Build my repair path'}<ArrowRight size={16}/></button>:<button className="button secondary" onClick={()=>setStage(0)}>Edit print context</button>}</div>
-    </div>{stage!==2&&<aside className="context-aside"><span className="eyebrow">REPAIR THE RIGHT THING</span><ComparisonDiagram kind={problemById[problemId].diagram} compact/><h3>{problemById[problemId].title}</h3><p>{problemById[problemId].confirm}</p><div className="aside-note"><span className="status-dot"/> All guidance runs in your browser.<br/>No upload. No account. No API key.</div></aside>}</div>
+    </div>{stage!==2&&<aside className="context-aside"><span className="eyebrow">REPAIR THE RIGHT THING</span><ComparisonDiagram kind={problemById[problemId].diagram} compact/><h3>{problemById[problemId].title}</h3><p>{problemById[problemId].confirm}</p><div className="aside-note"><span className="status-dot"/> All guidance runs in your browser.<br/>Local files stay on this device. No account or API key.</div></aside>}</div>
   </>;
 }

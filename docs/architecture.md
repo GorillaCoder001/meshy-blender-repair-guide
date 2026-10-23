@@ -1,6 +1,6 @@
 # Architecture and phased implementation
 
-Target: `GorillaCoder001/meshy-blender-repair-guide` only. React / TypeScript / Vite / Tailwind CSS. Static files only; Vite base `/meshy-blender-repair-guide/`. Hash navigation avoids Pages reload errors. No model uploads, telemetry, accounts, backend or external runtime APIs.
+Target: `GorillaCoder001/meshy-blender-repair-guide` only. React / TypeScript / Vite / Tailwind CSS. Static files only; Vite base `/meshy-blender-repair-guide/`. Hash navigation avoids Pages reload errors. The initial release had no model input. The 2026-10-23 update adds local-only file parsing and a Web Worker; model bytes are not transmitted. No telemetry, accounts, backend or external runtime APIs.
 
 1. **Research and shell:** complete research matrix; preserve repository history and licence; implement GitHub Actions Pages build; accessible responsive navigation.
 2. **Knowledge foundation:** version-aware tool records, source metadata, model types, glossary. Separate documented semantics from heuristic recipes.
@@ -19,7 +19,7 @@ Target: `GorillaCoder001/meshy-blender-repair-guide` only. React / TypeScript / 
 - `tests/`: deterministic scenario/integrity tests plus UI interaction tests.
 - `docs/`: research matrix, evidence limitations, implementation/test report.
 
-An eventual local upload analyzer can implement a `MeshAnalysis` interface with dimensions, triangle count and islands; self-reported diagnosis remains separate. No upload affordance or simulated analysis in this version.
+The local analyzer is now implemented in `src/model/` with explicit measured-result types, resource limits and skipped-check states. `ModelAdvisor` and `VisualRepairGuide` add local geometry findings and version-labelled screenshot navigation. The manual diagnosis remains separate. See `docs/local-advisor-release.md`.
 
 ## Release policy
 

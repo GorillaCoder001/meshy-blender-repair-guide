@@ -16,7 +16,8 @@ Target users: beginners who need to know what is wrong, how to confirm it, which
 
 ## What is included
 
-- Three-step diagnosis wizard with symptom-specific follow-up questions.
+- Local model advisor: open STL / 3MF / triangulated OBJ, preview it, inspect basic mesh health and follow screenshot arrows.
+- Three-step manual diagnosis wizard with symptom-specific follow-up questions.
 - Context inputs for model type, X/Y/Z size, nozzle, material, intended load, smallest preserved detail, detail priority, severity and actual precision requirements.
 - Requirement-based Blender / regenerate / CAD assessment; decorative bookmarks, coasters and bottle covers are not automatically routed to CAD.
 - Deterministic settings advisor with explicit heuristic formulas, suggested trial ranges, assumptions, higher/lower risks, confidence and source references.
@@ -29,7 +30,7 @@ Target users: beginners who need to know what is wrong, how to confirm it, which
 - Beginner / intermediate / advanced instruction presentation.
 - Responsive mobile navigation, keyboard controls, skip link and reduced-motion support.
 
-The application is client-side. It needs no backend, database, login, API key, paid API or external AI service. There is no model upload or automatic mesh analysis/repair, and no analytics. Outbound source links are user-initiated.
+The application is client-side. It needs no backend, database, login, API key, paid API or external AI service. Local files are parsed and inspected on the device in a Web Worker; they are never transmitted to a server. There is no automatic mesh repair or analytics. Outbound source links are user-initiated.
 
 ## Supported problems
 
@@ -106,11 +107,12 @@ docs/           research matrix, architecture and implementation report
 
 **New numerical rule:** research it first; add the rationale and classification to the matrix; implement a pure rule in `settings-engine.ts`; include formula, assumptions, trial range, tradeoffs and source metadata. Add scenario and integrity tests.
 
-**Future local-file analysis:** `MeshAnalysis` in `types.ts` leaves room for dimensions, triangle counts, components and boundary checks from a reliable browser-local analyzer. Keep observations and measured results distinct. Upload/analysis is intentionally not implemented.
+**Local-file analysis:** `src/model/` contains parsers, worker-based basic geometry checks, findings and a local controller. `src/pages/ModelAdvisor.tsx` combines measured results with screenshot guidance. Measurements and user interpretations remain distinct. See [the advisor release notes](docs/local-advisor-release.md).
 
 ## Limitations
 
-- No file inspection, slicing, automatic repair, print-time simulation or guaranteed print success.
+- Local basic geometry inspection is available. No slicing, automatic repair, print-time simulation or guaranteed print success.
+- Edge/component checks are skipped above 200,000 triangles and clearly shown as not checked. Self-intersections and local wall thickness are not measured.
 - No model-specific topology, strength, thermal or fit certification.
 - Voxel workload screening uses bounding-box cells, not actual RAM or triangle prediction.
 - Critical use withholds wall-strength numbers and requires separate design validation.
@@ -121,4 +123,8 @@ docs/           research matrix, architecture and implementation report
 
 ## Licence
 
-MIT. Original repository licence and history are preserved. This guide is independent of Blender, Meshy and Bambu Lab. Original diagrams and explanatory prose are authored for this project; linked documentation remains with its respective owners.
+MIT. Original repository licence and history are preserved. This guide is independent of Blender, Meshy and Bambu Lab. Original diagrams and explanatory prose are authored for this project; linked documentation remains with its respective owners. Bundled Blender manual screenshots retain CC BY-SA 4.0 attribution and are not relicensed as MIT. See [screenshot attribution](docs/screenshot-attribution.md).
+
+## Visual repair advisor update (2026-10-23)
+
+Open **Model advisor · upload**, choose a local model, then use **Show me** beside a finding. Screenshot arrows are clickable step targets; Previous/Next buttons are available below the image. Make the actual edit in your own Blender window. Your supplied 5.2.2 workspace image is exact; modifier-panel screenshots from the 4.5 manual are explicitly marked reference layouts. Open-menu captures that are unavailable are identified in the step caption. No text callout boxes are drawn on the image.
